@@ -11,7 +11,7 @@ from database import (
 
 app = FastAPI()
 
-origins = ["https://localhost:3000"]
+origins = ["http://localhost:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,7 +30,7 @@ async def get_todo():
     response = await fetch_all_todos()
     if response:
         return response
-    raise HTTPException(404, 'Not Found')
+    #raise HTTPException(404, 'Not Found')
 
 @app.get('/api/todo/{id}', response_model=Todo)
 async def get_todo_by_id(id):
@@ -41,6 +41,7 @@ async def get_todo_by_id(id):
 
 @app.post('/api/todo', response_model=Todo)
 async def post_todo(todo:Todo):
+    print(todo)
     response = await create_todo(todo.dict())
     if response:
         return response
