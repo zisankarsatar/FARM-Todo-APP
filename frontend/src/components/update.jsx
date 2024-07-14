@@ -1,15 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
-import { v4 as uuid } from 'uuid';
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-export default function Create() {
+export default function Update() {
+  const { state } = useLocation();
+  const { id, title, description } = state;
+
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
+    id: id,
+    title: title,
+    description: description,
   });
-  const unique_id = uuid();
-  const navigate = useNavigate();
 
   // function validateForm() {
   //     const {title, description} = formData;
@@ -19,7 +20,6 @@ export default function Create() {
   //     return true;
   // }
 
-  
   function handleInput(e) {
     setFormData({
       ...formData,
@@ -27,15 +27,15 @@ export default function Create() {
     });
   }
 
-  function sendForm(e){
+  function sendForm(e) {
     e.preventDefault();
 
-    axios.post('http://localhost:8000/api/todo', { id: unique_id, ...formData}).then(
-        (res) => {
-          navigate('/')
-        }
-    )
-    
+    axios
+      .put("http://localhost:8000/api/todo/" + id, formData)
+      .then((res) => {
+        console.log(res);
+        window.location.href = "http://localhost:3000/";
+      });
   }
 
   return (
@@ -57,6 +57,7 @@ export default function Create() {
                   name="title"
                   onChange={handleInput}
                   placeholder="Title"
+                  defaultValue={title}
                 />
               </div>
             </div>
@@ -69,8 +70,10 @@ export default function Create() {
                   type="textarea"
                   className="form-control"
                   name="description"
-                  onChange={handleInput}
                   placeholder="Description"
+                  defaultValue={description}
+                  onChange={handleInput}
+
                 />
               </div>
             </div>
@@ -78,7 +81,7 @@ export default function Create() {
             <div className="form-group row mb-3">
               <div className="col-sm-12">
                 <button type="submit" className="btn btn-primary">
-                  Create
+                  Update
                 </button>
               </div>
             </div>

@@ -1,15 +1,7 @@
-import axios from 'axios';
-
+import {useNavigate}  from "react-router-dom";
 
 export default function Todo(props) {
-
-  const deleteTodo = async (id) =>{
-    if(id){
-      axios.delete('http://localhost:8000/api/todo/' + id).then((res)=>{
-        window.location.href = "http://localhost:3000/";
-      });
-    }
-  }
+  const navigate = useNavigate();
 
   return (
     <div className="col-sm-4" key={props.index}>
@@ -20,8 +12,8 @@ export default function Todo(props) {
         <div className="card-body text-success">
           <p className="card-text">{props.todo.description}</p>
           <hr/>
-          <a type="button" className="btn btn-danger m-1" onClick={() => deleteTodo(props.todo.id)}>Delete</a>
-          <button type="button" className="btn btn-primary">Edit</button>
+          <a type="button" className="btn btn-danger m-1" onClick={() => props.delete(props.todo.id)}>Delete</a>
+          <button type="button" className="btn btn-primary" onClick={()=>{navigate('/update' , {state : {id : props.todo.id , title: props.todo.title, description: props.todo.description  }})}}>Edit</button>
 
 
         </div>
